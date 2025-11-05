@@ -1,37 +1,33 @@
-export const getFields = (data: unknown) => {
-  if (typeof data === 'object' && data !== null && 'fields' in data) {
-    return data.fields;
-  }
+import { Nullishable } from './types/utils';
+import { forceObject, getContentType, getFields, isObject } from './utils';
 
-  return {} as Record<string, unknown>;
-};
-
-export const unWrapper = (response: any): Record<string, any> | undefined => {
-  const fields = getFields(response) as Record<string, any>;
-  const keysOfFields = Object.keys(fields);
-  const contentTypeName = response?.sys?.contentType?.sys?.id || '';
-  const contentType = contentTypeName || response?.sys?.type || '';
+export const unWrapper = <T extends Nullishable<Record<string, unknown>>>(response: T) => {
+  const contentType = getContentType(response);
 
   if (!contentType) {
-    return undefined;
+    return {} as NonNullable<T>;
   }
 
-  let data: Record<string, any> = {};
+  let data: Record<string, unknown> = {};
+  const fieldsInResponse = getFields(response);
 
-  keysOfFields.forEach((key: string) => {
-    if (Array.isArray(fields[key])) {
-      data[key] = fields[key].map((c: any) => unWrapper(c));
+  Object.keys(fieldsInResponse).forEach((key: string) => {
+    const fieldData = fieldsInResponse[key];
+
+    if (Array.isArray(fieldData)) {
+      data[key] = fieldData.map((c: any) => unWrapper(c));
+
+      return;
     }
 
     if (
-      !Array.isArray(fields[key]) &&
-      typeof fields[key] === 'object' &&
-      Object.keys(fields[key]).includes('sys') &&
-      Object.keys(fields[key]).includes('fields')
+      isObject(fieldData) &&
+      Object.keys(fieldData).includes('sys') &&
+      Object.keys(fieldData).includes('fields')
     ) {
-      data[key] = unWrapper(fields[key]);
+      data[key] = unWrapper(forceObject(fieldData));
     }
   });
 
-  return { contentType, ...data };
+  return { contentType, ...data } as unknown as NonNullable<T>;
 };

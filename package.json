@@ -1,22 +1,50 @@
 {
-  "name": "vite-project",
-  "private": true,
-  "version": "0.0.0",
+  "name": "contentful-response-unwrapper",
+  "version": "1.0.0",
+  "description": "A utility to unwrap Contentful API responses into plain objects.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aksxmtvnty9/contentful-response-unwrapper"
+  },
+  "module": "./lib/index.js",
+  "main": "./lib/index.cjs",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint . --ext .ts src",
+    "prepublish": "pnpm run build",
+    "test": "vitest"
+  },
+  "author": "Anush kumar N <anush.kumar.1998@gmail.com>",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
     "@trivago/prettier-plugin-sort-imports": "6.0.0",
     "@types/node": "24.10.0",
+    "@vitest/coverage-v8": "4.0.7",
     "eslint": "9.39.1",
+    "jsdom": "27.1.0",
     "prettier": "3.6.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.3",
     "vite": "7.1.7",
-    "vite-plugin-dts": "4.5.4"
+    "vite-plugin-dts": "4.5.4",
+    "vitest": "4.0.7"
   }
 }
