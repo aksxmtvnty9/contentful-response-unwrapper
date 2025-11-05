@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+
+# Build outputs
+lib
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Vite
+.vite/
+
+# IDE and editor files
+.vscode
+
+# OS generated files
+.DS_Store
